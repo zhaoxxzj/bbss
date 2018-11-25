@@ -24,8 +24,18 @@ def create_post(request):
 
 
 def edit_post(request):
+    if request.method == "POST":
+        post_id = request.POST.get('post_id')
+        post = Post.objects.get(id=post_id)
+        post.title = request.POST.get('title')
+        post.content = request.POST.get('content')
+        post.save()
+        return redirect('/post/read/?post_id=%s' % post.id)
+    else:
+        post_id = request.GET.get('post_id')
+        post = Post.objects.get(id=post_id)
     data = {
-
+        'post': post
     }
     return render(request, 'edit_post.html', context=data)
 
@@ -40,7 +50,9 @@ def read_post(request):
 
 
 def search(request):
+    keyword = request.POST.get('keyword')
+    posts = Post.objects.filter(content__contains=keyword)
     data = {
-
+        'posts': posts
     }
     return render(request, 'search.html', context=data)
