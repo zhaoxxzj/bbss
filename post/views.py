@@ -14,6 +14,7 @@ def post_list(request):
     start = (page - 1) * per_page               # 每页的开始条数
     end = start + per_page                      # 每页的结束条数
     posts = Post.objects.all().order_by('-id')[start:end]           # 获取所有按照时间排序显示
+    # 你好，bash
     data = {
         'posts': posts,
         'pages': range(pages),
