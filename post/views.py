@@ -1,12 +1,22 @@
 from django.shortcuts import render, redirect
+from math import ceil
 
 # Create your views here.
 from post.models import Post
 
 
 def post_list(request):
-    data = {
+    page = int(request.GET.get("page", 1))      # 当前页码
+    total = Post.objects.count()                # 新闻总数
+    per_page = 10                               # 每页显示新闻数量
+    pages = ceil(total / per_page)              # 总共多少页
 
+    start = (page - 1) * per_page               # 每页的开始条数
+    end = start + per_page                      # 每页的结束条数
+    posts = Post.objects.all().order_by('-id')[start:end]           # 获取所有按照时间排序显示
+    data = {
+        'posts': posts,
+        'pages': range(pages),
     }
     return render(request,'post_list.html',context=data)
 
